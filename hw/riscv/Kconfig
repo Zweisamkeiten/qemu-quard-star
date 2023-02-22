@@ -55,6 +55,9 @@ config SHAKTI_C
 config QUARD_STAR
     bool
     select SERIAL
+    select RISCV_ACLINT
+    select SIFIVE_PLIC
+    select PFLASH_CFI01
 
 config SIFIVE_E
     bool
