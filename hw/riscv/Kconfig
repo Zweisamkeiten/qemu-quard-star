@@ -52,6 +52,10 @@ config SHAKTI_C
     select SIFIVE_PLIC
     select UNIMP
 
+config QUARD_STAR
+    bool
+    select SERIAL
+
 config SIFIVE_E
     bool
     select RISCV_ACLINT
