@@ -22,3 +22,4 @@ GTAGS
 *.gcov
 output/qemu
 compile_commands.json
+output/lowlevelboot
