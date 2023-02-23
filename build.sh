@@ -16,8 +16,8 @@ fi
 
 cd lowlevelboot || exit
 
-$CROSS_PREFIX-gcc -x assembler-with-cpp -c startup.s -o "$BUILD_FOLDER"/output/lowlevelboot/startup.o
-$CROSS_PREFIX-gcc -nostartfiles -T./boot.lds -Wl,-Map="$BUILD_FOLDER"/output/lowlevelboot/lowlevel_fw.map -Wl,--gc-sections "$BUILD_FOLDER"/output/lowlevelboot/startup.o -o "$BUILD_FOLDER"/output/lowlevelboot/lowlevel_fw.elf
+$CROSS_PREFIX-gcc -x assembler-with-cpp -march=rv64g -c startup.s -o "$BUILD_FOLDER"/output/lowlevelboot/startup.o
+$CROSS_PREFIX-ld -T./boot.lds --gc-sections -Map="$BUILD_FOLDER"/output/lowlevelboot/lowlevel_fw.map "$BUILD_FOLDER"/output/lowlevelboot/startup.o -o "$BUILD_FOLDER"/output/lowlevelboot/lowlevel_fw.elf
 $CROSS_PREFIX-objcopy -O binary -S "$BUILD_FOLDER"/output/lowlevelboot/lowlevel_fw.elf "$BUILD_FOLDER"/output/lowlevelboot/lowlevel_fw.bin
 $CROSS_PREFIX-objdump --source --demangle --disassemble --reloc --wide "$BUILD_FOLDER"/output/lowlevelboot/lowlevel_fw.elf > "$BUILD_FOLDER"/output/lowlevelboot/lowlevel_fw.lst
 
