@@ -61,3 +61,6 @@
 [submodule "subprojects/libvfio-user"]
 	path = subprojects/libvfio-user
 	url = https://gitlab.com/qemu-project/libvfio-user.git
+[submodule "opensbi"]
+	path = opensbi
+	url = git@github.com:Zweisamkeiten/opensbi.git
