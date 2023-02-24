@@ -11,6 +11,8 @@ SECTIONS
 {
   .text :
   {
+		PROVIDE(_text_start = .);
     KEEP(*(.text))
+		PROVIDE(_text_end = .);
   } >flash
 }

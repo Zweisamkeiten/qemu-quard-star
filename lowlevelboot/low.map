@@ -1,0 +1,39 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+flash            0x0000000020000000 0x0000000000080000 axrl !w
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+
+.text           0x0000000020000000     0x2086
+                [!provide]                        PROVIDE (_text_start = .)
+ *(.text)
+ .text          0x0000000020000000     0x2086 startup.o
+                0x0000000020000000                _start
+                [!provide]                        PROVIDE (_text_end = .)
+LOAD startup.o
+OUTPUT(low.elf elf64-littleriscv)
+
+.rela.dyn       0x0000000020002088        0x0
+ .rela.got      0x0000000020002088        0x0 startup.o
+
+.data           0x0000000020002086        0x0
+ .data          0x0000000020002086        0x0 startup.o
+
+.got            0x0000000020002088       0x10
+ .got           0x0000000020002088       0x10 startup.o
+                0x0000000020002088                _GLOBAL_OFFSET_TABLE_
+
+.got.plt        0x0000000020002098       0x10
+ .got.plt       0x0000000020002098       0x10 startup.o
+
+.bss            0x00000000200020a8        0x0
+ .bss           0x00000000200020a8        0x0 startup.o
+
+.riscv.attributes
+                0x0000000000000000       0x4c
+ .riscv.attributes
+                0x0000000000000000       0x4c startup.o

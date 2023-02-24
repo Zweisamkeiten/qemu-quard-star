@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MAKEJOBS=$(nproc)
-CROSS_PREFIX=riscv64-linux-gnu-
+CROSS_PREFIX=riscv64-linux-gnu
 BUILD_FOLDER=$(cd "$(dirname "$0")" || exit;pwd)
 
 if [[ ! -d "$BUILD_FOLDER/output/qemu" ]]; then
@@ -31,8 +31,12 @@ if [ ! -d "$BUILD_FOLDER/output/opensbi" ]; then
 fi
 
 cd "$BUILD_FOLDER"/opensbi || exit
-make -j"$MAKEJOBS" CROSS_COMPILE="$CROSS_PREFIX" PLATFORM=quard_star
+make -j"$MAKEJOBS" CROSS_COMPILE="$CROSS_PREFIX-" PLATFORM=quard_star
 cp -r "$BUILD_FOLDER/opensbi/build/platform/quard_star/firmware"/*.bin "$BUILD_FOLDER/output/opensbi/"
+
+# 生成 sbi.dtb
+cd "$BUILD_FOLDER"/dts || exit
+dtc -I dts -O dtb -o "$BUILD_FOLDER/output/opensbi/quard_star_sbi.dtb" quard_star_sbi.dts
 
 # 合成 firmware 固件
 if [ ! -d "$BUILD_FOLDER/output/firmware" ]; then
@@ -43,6 +47,7 @@ cd "$BUILD_FOLDER"/output/firmware || exit
 rm -rf fw.bin
 dd of=fw.bin bs=1k count=64k if=/dev/zero
 dd of=fw.bin bs=1k conv=notrunc seek=0 if="$BUILD_FOLDER"/output/lowlevelboot/lowlevel_fw.bin
+dd of=fw.bin bs=1k conv=notrunc seek=512 if="$BUILD_FOLDER"/output/opensbi/quard_star_sbi.dtb
 dd of=fw.bin bs=1k conv=notrunc seek=2k if="$BUILD_FOLDER"/output/opensbi/fw_jump.bin
 
 cd "$BUILD_FOLDER" || exit
