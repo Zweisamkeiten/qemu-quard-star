@@ -9,5 +9,5 @@ SHELL_FOLDER=$(cd "$(dirname "$0")" || exit; pwd)
   -smp 4                                            \
   -bios none                                        \
   -drive if=pflash,bus=0,unit=0,format=raw,file="$SHELL_FOLDER"/output/firmware/fw.bin \
-  -nographic --parallel none -s -S
+  -nographic --parallel none #  -s -S
 
