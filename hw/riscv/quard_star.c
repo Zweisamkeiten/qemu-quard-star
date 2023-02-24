@@ -41,6 +41,7 @@
 // https://patchwork.kernel.org/project/qemu-devel/cover/20210724122407.2486558-1-anup.patel@wdc.com/
 // remove sifive_clint.c with RISC-V ACLINT
 #include "hw/intc/riscv_aclint.h"
+#include "hw/intc/riscv_aplic.h"
 
 #include "hw/intc/sifive_plic.h"
 
@@ -213,6 +214,8 @@ static void quard_star_machine_init(MachineState *machine)
         sysbus_realize(SYS_BUS_DEVICE(&s->soc[i]), &error_abort);
 
         /* Per-socket MTIMER CLINT */
+        riscv_aclint_swi_create(memmap[QUARD_STAR_CLINT].base,
+                                0, machine->smp.cpus, false);
         riscv_aclint_mtimer_create(memmap[QUARD_STAR_CLINT].base +
                 i * memmap[QUARD_STAR_CLINT].size + RISCV_ACLINT_SWI_SIZE,
             RISCV_ACLINT_DEFAULT_MTIMER_SIZE, base_hartid, hart_count,
