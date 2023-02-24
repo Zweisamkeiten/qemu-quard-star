@@ -8,6 +8,51 @@
 
 	chosen {
 		stdout-path = "/soc/serial0@10000000";
+
+    /* https://github.com/riscv-software-src/opensbi/blob/master/docs/domain_support.md */
+		opensbi-domains {                                                                     /* 域配置节点 */
+      compatible = "opensbi,domain,config";                                               /* 域的兼容字符串 配置。 此 DT 属性应具有值 “opensbi、domain、config” */
+
+      tmem: tmem {
+        compatible = "opensbi,domain,memregion";                                          /* 域内存的兼容字符串 地区。 此 DT 属性应具有值 “opensbi、domain、memregion” */
+        base = <0x0 0xb0000000>;                                                          /* (强制)——域内存区域的基地址。 这 DT 属性应该有一个 2 ^ 顺序 对齐的 64 位地址 */
+        order = <28>;                                                                     /* 域内存区域的顺序。 这个DT 属性应在范围内具有 32 位值（即一个 DT 单元格） 3 <= 顺序 <= __riscv_xlen */
+      };
+
+      tsearial: tsearial {
+        compatible = "opensbi,domain,memregion";
+        base = <0x0 0x10002000>;
+        order = <8>;
+        mmio;                                                                             /* (可选)- 一个布尔标志，表示域是否 内存区域是内存映射 I/O (MMIO) 区域 */
+        devices = <&serial2>;                                                             /* (可选)- 设备的设备 DT 节点 phandles 列表 属于这个域内存区域 */
+      };
+
+      allmem: allmem {
+        compatible = "opensbi,domain,memregion";
+        base = <0x0 0x0>;
+        order = <64>;
+      };
+
+      tdomain: trusted-domain {
+        compatible = "opensbi,domain,instance";                                           /* (强制)- 域实例的兼容字符串. 此 DT 属性应具有值 'opensbi,domain,instance' */
+        possible-harts = <&cpu0>;                                                         /* (可选)- CPU DT 节点 phandles 的列表 域实例. 此列表代表了可能的 HART 域实例. */
+        regions = <&tmem 0x3f>, <&tsearial 0x3f>;                                         /* (可选)- 域内存区域列表 DT 节点 phandle 域实例的访问权限 */
+        boot-hart = <&cpu0>;                                                              /* (可选)- 启动 HART 的 DT 节点 phandle 域实例. 如果将冷启动 HART 分配给域实例, 则此DT属性被忽略, 冷启动 HART 被假定为 启动域实例的 HART */
+        next-arg1 = <0x0 0x00000000>;                                                     /* (可选)- 下级程序的参数 */
+        next-addr = <0x0 0xb0000000>;                                                     /* (可选)- 下级程序的起始地址 */
+        next-mode = <0x0>;                                                                /* (可选)- 下级程序的允许模式 0为U模式，1为S模式 */
+        system-reset-allowed;                                                             /* (可选)- 一个布尔标志，表示 是否允许域实例进行系统重置. */
+      };
+
+      udomain: untrusted-domain {
+        compatible = "opensbi,domain,instance";
+        possible-harts = <&cpu1 &cpu2 &cpu3 &cpu4>;
+        regions = <&tmem 0x2f>, <&tsearial 0x2f>, <&allmem 0x2f>;
+        next-arg1 = <0x0 0x82200000>;
+        next-addr = <0x0 0x82000000>;
+        next-mode = <0x1>;
+      };
+		};
 	};
 
 	memory@80000000 {
@@ -26,6 +71,7 @@
 			reg = <0x0>;
 			status = "okay";
 			compatible = "riscv";
+      opensbi-domain = <&tdomain>;
 			riscv,isa = "rv64imafdcsu";
 			mmu-type = "riscv,sv48";
 
@@ -43,6 +89,7 @@
 			reg = <0x1>;
 			status = "okay";
 			compatible = "riscv";
+      opensbi-domain = <&udomain>;
 			riscv,isa = "rv64imafdcsu";
 			mmu-type = "riscv,sv48";
 
@@ -60,6 +107,7 @@
 			reg = <0x2>;
 			status = "okay";
 			compatible = "riscv";
+      opensbi-domain = <&udomain>;
 			riscv,isa = "rv64imafdcsu";
 			mmu-type = "riscv,sv48";
 
@@ -77,6 +125,7 @@
 			reg = <0x3>;
 			status = "okay";
 			compatible = "riscv";
+      opensbi-domain = <&udomain>;
 			riscv,isa = "rv64imafdcsu";
 			mmu-type = "riscv,sv48";
 
@@ -94,6 +143,7 @@
 			reg = <0x4>;
 			status = "okay";
 			compatible = "riscv";
+      opensbi-domain = <&udomain>;
 			riscv,isa = "rv64imafdcsu";
 			mmu-type = "riscv,sv48";
 
@@ -111,6 +161,7 @@
 			reg = <0x5>;
 			status = "okay";
 			compatible = "riscv";
+      opensbi-domain = <&udomain>;
 			riscv,isa = "rv64imafdcsu";
 			mmu-type = "riscv,sv48";
 
@@ -128,6 +179,7 @@
 			reg = <0x6>;
 			status = "okay";
 			compatible = "riscv";
+      opensbi-domain = <&udomain>;
 			riscv,isa = "rv64imafdcsu";
 			mmu-type = "riscv,sv48";
 
@@ -145,6 +197,7 @@
 			reg = <0x7>;
 			status = "okay";
 			compatible = "riscv";
+      opensbi-domain = <&tdomain>;
 			riscv,isa = "rv64imafdcsu";
 			mmu-type = "riscv,sv48";
 
@@ -225,7 +278,7 @@
 			compatible = "ns16550a";
 		};
 
-		plic@c000000 {
+    plic@c000000 {
 			phandle = <0x11>;
 			riscv,ndev = <0x35>;
 			reg = <0x0 0xc000000 0x0 0x210000>;

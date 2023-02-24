@@ -41,6 +41,16 @@ if [ -a "$BUILD_FOLDER"/output/opensbi/quard_star_sbi.dtb ]; then
 fi
 dtc -I dts -O dtb -o "$BUILD_FOLDER/output/opensbi/quard_star_sbi.dtb" quard_star_sbi.dts
 
+# 编译 trusted_domain
+if [ ! -d "$BUILD_FOLDER/output/trusted_domain" ]; then
+  mkdir "$BUILD_FOLDER/output/trusted_domain"
+fi
+cd "$BUILD_FOLDER/trusted_domain" || exit
+$CROSS_PREFIX-gcc -x assembler-with-cpp -c startup.S -o "$BUILD_FOLDER"/output/trusted_domain/startup.o
+$CROSS_PREFIX-ld -T./link.ld --gc-sections -Map="$BUILD_FOLDER"/output/trusted_domain/trusted_fw.map "$BUILD_FOLDER"/output/trusted_domain/startup.o -o "$BUILD_FOLDER"/output/trusted_domain/trusted_fw.elf
+$CROSS_PREFIX-objcopy -O binary -S "$BUILD_FOLDER"/output/trusted_domain/trusted_fw.elf "$BUILD_FOLDER"/output/trusted_domain/trusted_fw.bin
+$CROSS_PREFIX-objdump --source --demangle --disassemble --reloc --wide "$BUILD_FOLDER"/output/trusted_domain/trusted_fw.elf > "$BUILD_FOLDER"/output/trusted_domain/trusted_fw.lst
+
 # 合成 firmware 固件
 if [ ! -d "$BUILD_FOLDER/output/firmware" ]; then
   mkdir -p "$BUILD_FOLDER/output/firmware"
@@ -52,5 +62,6 @@ dd of=fw.bin bs=1k count=64k if=/dev/zero
 dd of=fw.bin bs=1k conv=notrunc seek=0 if="$BUILD_FOLDER"/output/lowlevelboot/lowlevel_fw.bin
 dd of=fw.bin bs=1k conv=notrunc seek=512 if="$BUILD_FOLDER"/output/opensbi/quard_star_sbi.dtb
 dd of=fw.bin bs=1k conv=notrunc seek=2k if="$BUILD_FOLDER"/output/opensbi/fw_jump.bin
+dd of=fw.bin bs=1k conv=notrunc seek=4k if="$BUILD_FOLDER"/output/trusted_domain/trusted_fw.bin
 
 cd "$BUILD_FOLDER" || exit
