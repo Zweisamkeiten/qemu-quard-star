@@ -36,6 +36,9 @@ cp -r "$BUILD_FOLDER/opensbi/build/platform/quard_star/firmware"/*.bin "$BUILD_F
 
 # 生成 sbi.dtb
 cd "$BUILD_FOLDER"/dts || exit
+if [ -a "$BUILD_FOLDER"/output/opensbi/quard_star_sbi.dtb ]; then
+  rm "$BUILD_FOLDER/output/opensbi/quard_star_sbi.dtb"
+fi
 dtc -I dts -O dtb -o "$BUILD_FOLDER/output/opensbi/quard_star_sbi.dtb" quard_star_sbi.dts
 
 # 合成 firmware 固件
