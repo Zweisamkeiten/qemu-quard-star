@@ -1,17 +1,19 @@
 #!/bin/bash
 
-SHELL_FOLDER=$(cd "$(dirname "$0")" || exit; pwd)
+BIN_PATH=$(cd "$(dirname "$0")"/../output/qemu/bin/ || exit; pwd)
+WORKSPACE=$(cd .. || exit; pwd)
+OUTPUTPATH="$WORKSPACE"/output
 
 DEFAULT_VC="1280x720"
 
 # nographic C-A x for exit & C-A c for monitor
-"$SHELL_FOLDER"/output/qemu/bin/qemu-system-riscv64 \
+"$BIN_PATH"/qemu-system-riscv64                     \
   -M quard-star                                     \
   -m 1G                                             \
   -smp 4                                            \
   -bios none                                        \
-  -drive if=pflash,bus=0,unit=0,format=raw,file="$SHELL_FOLDER"/output/firmware/fw.bin \
+  -drive if=pflash,bus=0,unit=0,format=raw,file="$OUTPUTPATH"/firmware/fw.bin \
   --parallel none                                   \
   --serial vc:$DEFAULT_VC --serial vc:$DEFAULT_VC --serial vc:$DEFAULT_VC --monitor vc:$DEFAULT_VC \
-  --parallel none # -s -S
+  --parallel none -s -S
 
