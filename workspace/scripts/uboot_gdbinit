@@ -3,9 +3,11 @@ display/z $x6
 display/z $x7
 
 set disassemble-next-line on
-lay src
-b sbi_init
-b sbi_hart_switch_mode
+lay split
+b _start
+b fdtdec_setup
+b fdtdec_prepare_fdt
+b fdt_check_header
 target remote : 1234
 c
 s

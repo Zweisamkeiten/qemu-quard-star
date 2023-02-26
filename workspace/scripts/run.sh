@@ -10,10 +10,9 @@ DEFAULT_VC="1280x720"
 "$BIN_PATH"/qemu-system-riscv64                     \
   -M quard-star                                     \
   -m 1G                                             \
-  -smp 4                                            \
-  -bios none                                        \
+  -smp 8                                            \
   -drive if=pflash,bus=0,unit=0,format=raw,file="$OUTPUTPATH"/firmware/fw.bin \
   --parallel none                                   \
   --serial vc:$DEFAULT_VC --serial vc:$DEFAULT_VC --serial vc:$DEFAULT_VC --monitor vc:$DEFAULT_VC \
-  --parallel none -s -S
+  --parallel none #-s -S
 
