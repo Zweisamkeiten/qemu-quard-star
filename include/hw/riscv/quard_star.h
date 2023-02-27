@@ -40,6 +40,7 @@ struct RISCVVirtState {
     RISCVHartArrayState soc[QUARD_STAR_SOCKETS_MAX];
     DeviceState *plic[QUARD_STAR_SOCKETS_MAX];
     PFlashCFI01 *flash;
+   FWCfgState *fw_cfg;
 };
 
 enum {
@@ -50,6 +51,8 @@ enum {
     QUARD_STAR_UART0,
     QUARD_STAR_UART1,
     QUARD_STAR_UART2,
+    QUARD_STAR_VIRTIO,
+    QUARD_STAR_FW_CFG,
     QUARD_STAR_FLASH,
     QUARD_STAR_DRAM,
 };
@@ -57,6 +60,8 @@ enum {
 // interrupt Source ID 范围：1 ~ 53(0x35)
 // 0 预留不用
 enum {
+    QUARD_STAR_IRQ = 1,         /* 1 to 8 */
+    QUARD_STAR_COUNT = 8,
     QUARD_STAR_UART0_IRQ = 10,
     QUARD_STAR_UART1_IRQ = 11,
     QUARD_STAR_UART2_IRQ = 12,

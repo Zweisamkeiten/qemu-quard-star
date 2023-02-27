@@ -13,10 +13,34 @@
 		opensbi-domains {                                                                     /* 域配置节点 */
       compatible = "opensbi,domain,config";                                               /* 域的兼容字符串 配置。 此 DT 属性应具有值 “opensbi、domain、config” */
 
-      tmem: tmem {
+      tmem0: tmem0 {
         compatible = "opensbi,domain,memregion";                                          /* 域内存的兼容字符串 地区。 此 DT 属性应具有值 “opensbi、domain、memregion” */
         base = <0x0 0xbf800000>;                                                          /* (强制)——域内存区域的基地址。 这 DT 属性应该有一个 2 ^ 顺序 对齐的 64 位地址 */
-        order = <23>;                                                                     /* 域内存区域的顺序。 这个DT 属性应在范围内具有 32 位值（即一个 DT 单元格） 3 <= 顺序 <= __riscv_xlen */
+        order = <22>;                                                                     /* 域内存区域的顺序。 这个DT 属性应在范围内具有 32 位值（即一个 DT 单元格） 3 <= 顺序 <= __riscv_xlen */
+      };
+
+      tmem1: tmem1 {
+        compatible = "opensbi,domain,memregion";
+        base = <0x0 0xbfc00000>;
+        order = <21>;
+      };
+
+      tmem2: tmem2 {
+        compatible = "opensbi,domain,memregion";
+        base = <0x0 0xbfe00000>;
+        order = <20>;
+      };
+
+      tmem3: tmem3 {
+        compatible = "opensbi,domain,memregion";
+        base = <0x0 0xbff00000>;
+        order = <19>;
+      };
+
+      tmem4: tmem4 {
+        compatible = "opensbi,domain,memregion";
+        base = <0x0 0xbffc0000>;
+        order = <18>;
       };
 
       tsearial: tsearial {
@@ -36,7 +60,7 @@
       tdomain: trusted-domain {
         compatible = "opensbi,domain,instance";                                           /* (强制)- 域实例的兼容字符串. 此 DT 属性应具有值 'opensbi,domain,instance' */
         possible-harts = <&cpu3>;                                                         /* (可选)- CPU DT 节点 phandles 的列表 域实例. 此列表代表了可能的 HART 域实例. */
-        regions = <&tmem 0x3f>, <&tsearial 0x3f>, <&allmem 0x3f>;                         /* (可选)- 域内存区域列表 DT 节点 phandle 域实例的访问权限 */
+        regions = <&tmem0 0x3f>, <&tmem1 0x3f>, <&tmem2 0x3f>, <&tmem4 0x3f>,<&tsearial 0x3f>, <&allmem 0x3f>;                         /* (可选)- 域内存区域列表 DT 节点 phandle 域实例的访问权限 */
         boot-hart = <&cpu3>;                                                              /* (可选)- 启动 HART 的 DT 节点 phandle 域实例. 如果将冷启动 HART 分配给域实例, 则此DT属性被忽略, 冷启动 HART 被假定为 启动域实例的 HART */
         next-arg1 = <0x0 0x00000000>;                                                     /* (可选)- 下级程序的参数 */
         next-addr = <0x0 0xbf800000>;                                                     /* (可选)- 下级程序的起始地址 */
@@ -47,7 +71,7 @@
       udomain: untrusted-domain {
         compatible = "opensbi,domain,instance";
         possible-harts = <&cpu0 &cpu1 &cpu2>;
-        regions = <&tmem 0x2f>, <&tsearial 0x2f>, <&allmem 0x3f>;
+        regions = <&tmem0 0x0>, <&tmem1 0x0>, <&tmem2 0x0>, <&tmem4 0x0>, <&tsearial 0x0>, <&tsearial 0x2f>, <&allmem 0x3f>;
         boot-hart = <&cpu0>;                                                              /* (可选)- 启动 HART 的 DT 节点 phandle 域实例. 如果将冷启动 HART 分配给域实例, 则此DT属性被忽略, 冷启动 HART 被假定为 启动域实例的 HART */
         next-arg1 = <0x0 0xb0000000>;
         next-addr = <0x0 0xb0200000>;
@@ -273,7 +297,7 @@
 		};
 
 		serial1: serial1@10001000 {
-			interrupts = <0xa>;
+			interrupts = <0xb>;
 			interrupt-parent = <0x11>;
 			clock-frequency = <0x384000>;
 			reg = <0x0 0x10001000 0x0 0x100>;
@@ -281,7 +305,7 @@
 		};
 
     serial2: serial2@10002000 {
-			interrupts = <0xa>;
+			interrupts = <0xc>;
 			interrupt-parent = <0x11>;
 			clock-frequency = <0x384000>;
 			reg = <0x0 0x10002000 0x0 0x100>;

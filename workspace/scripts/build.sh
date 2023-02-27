@@ -108,5 +108,13 @@ dd of=fw.bin bs=1k conv=notrunc seek=2k if="$OUTPUTPATH"/opensbi/fw_jump.bin
 dd of=fw.bin bs=1k conv=notrunc seek=4k if="$OUTPUTPATH"/trusted_domain/trusted_fw.bin
 dd of=fw.bin bs=1k conv=notrunc seek=8k if="$OUTPUTPATH"/uboot/u-boot.bin
 
+# 合成文件系统映像
+if [ ! -d "$OUTPUTPATH/rootfs" ]; then  
+  mkdir "$OUTPUTPATH"/rootfs
+fi
+cd "$OUTPUTPATH"/rootfs || exit
+rm -rf rootfs.img
+dd of=rootfs.img bs=1k count=32k if=/dev/zero
+
 cd "$SCRIPT_PATH" || exit
 
