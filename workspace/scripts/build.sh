@@ -45,7 +45,9 @@ fi
 
 cd "$OPENSBI_PATH" || exit
 make -j"$MAKEJOBS" CROSS_COMPILE="$CROSS_PREFIX-" PLATFORM=quard_star
-cp -r "$OPENSBI_PATH/build/platform/quard_star/firmware"/*.bin "$OUTPUTPATH/opensbi/"
+cp -r "$OPENSBI_PATH/build/platform/quard_star/firmware"/fw_jump.bin "$OUTPUTPATH/opensbi/fw_jump.bin"
+cp -r "$OPENSBI_PATH/build/platform/quard_star/firmware"/fw_jump.elf "$OUTPUTPATH/opensbi/fw_jump.elf"
+$CROSS_PREFIX-objdump --source --demangle --disassemble --reloc --wide "$OUTPUTPATH"/opensbi/fw_jump.elf > "$OUTPUTPATH"/opensbi/fw_jump.lst
 
 # 生成 sbi.dtb
 printf "%s\n" "${blue}BUILD sbi_dtb${normal}"
@@ -75,7 +77,7 @@ fi
 
 cd "$UBOOT_PATH" || exit
 
-make CROSS_COMPILE="$CROSS_PREFIX-" qemu-riscv64_smode_defconfig
+make CROSS_COMPILE="$CROSS_PREFIX-" qemu-quard-star_defconfig
 make CROSS_COMPILE="$CROSS_PREFIX-" -j"$MAKEJOBS"
 cp "$UBOOT_PATH"/u-boot "$OUTPUTPATH"/uboot/u-boot.elf
 cp "$UBOOT_PATH"/u-boot.map "$OUTPUTPATH"/uboot/u-boot.map
