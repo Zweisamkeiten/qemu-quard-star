@@ -10,6 +10,7 @@ OPENSBI_PATH="$QEMU_PATH"/roms/opensbi
 UBOOT_PATH="$QEMU_PATH"/roms/u-boot
 DTS_PATH="$WORKSPACE"/dts
 TRUSTED_DOMAIN_PATH="$WORKSPACE"/trusted_domain
+LINUX_KERNEL_PATH="$WORKSPACE"/linux-6.2.1
 
 blue=$(tput setaf 2)
 normal=$(tput sgr0)
@@ -107,14 +108,6 @@ dd of=fw.bin bs=1k conv=notrunc seek=1K if="$OUTPUTPATH"/uboot/quard_star_uboot.
 dd of=fw.bin bs=1k conv=notrunc seek=2k if="$OUTPUTPATH"/opensbi/fw_jump.bin
 dd of=fw.bin bs=1k conv=notrunc seek=4k if="$OUTPUTPATH"/trusted_domain/trusted_fw.bin
 dd of=fw.bin bs=1k conv=notrunc seek=8k if="$OUTPUTPATH"/uboot/u-boot.bin
-
-# 合成文件系统映像
-if [ ! -d "$OUTPUTPATH/rootfs" ]; then  
-  mkdir "$OUTPUTPATH"/rootfs
-fi
-cd "$OUTPUTPATH"/rootfs || exit
-rm -rf rootfs.img
-dd of=rootfs.img bs=1k count=32k if=/dev/zero
 
 cd "$SCRIPT_PATH" || exit
 

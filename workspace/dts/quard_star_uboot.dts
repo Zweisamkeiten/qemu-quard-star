@@ -1,4 +1,4 @@
-# 这个设备树不起作用, 还是需要去 u-boot 对 该 platform 的设备树设置 才有效
+// 这个设备树不起作用, 还是需要去 u-boot 对 该 platform 的设备树设置 才有效
 /dts-v1/;
 
 / {
@@ -8,13 +8,13 @@
 	model = "riscv-quard-star,qemu";
 
 	chosen {
-		bootargs = "root=/dev/vda2 rw console=ttyS0";
+		bootargs = "earlycon console=ttySIF0 root=/dev/vda2 rootwait rw";
 		stdout-path = "/soc/serial0@10000000";
 	};
 
 	memory@80000000 {
 		device_type = "memory";
-		reg = <0x0 0x80000000 0x0 0x40000000>;
+		reg = <0x0 0x80000000 0x0 0x3f800000>;
 	};
 
   fw-cfg@10108000 {

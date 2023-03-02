@@ -24,3 +24,6 @@ output/qemu
 compile_commands.json
 output/lowlevelboot
 output
+workspace/linux-6.1.14
+workspace/generic
+workspace/linux-6.1.14.tar.xz
