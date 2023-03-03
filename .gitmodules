@@ -64,3 +64,6 @@
 [submodule "workspace/linux-6.2.1"]
 	path = workspace/linux-6.2.1
 	url = https://github.com/Zweisamkeiten/linux-6.2.1.git
+[submodule "workspace/busybox"]
+	path = workspace/busybox
+	url = https://github.com/Zweisamkeiten/busybox.git
