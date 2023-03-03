@@ -8,7 +8,7 @@
 	model = "riscv-quard-star,qemu";
 
 	chosen {
-		bootargs = "earlycon console=ttySIF0 root=/dev/vda2 rootwait rw";
+		bootargs = "earlycon console=ttyS0 root=/dev/vda2 rw";
 		stdout-path = "/soc/serial0@10000000";
 	};
 
