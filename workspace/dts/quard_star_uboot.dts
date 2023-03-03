@@ -7,6 +7,18 @@
 	compatible = "riscv-quard-star";
 	model = "riscv-quard-star,qemu";
 
+  reserved-memory {
+    #address-cells = <0x00000002>;
+    #size-cells = <0x00000002>;
+    ranges;
+    mmode_resv1@80020000 {
+      reg = <0x00000000 0x80020000 0x00000000 0x00020000>;
+    };
+    mmode_resv0@80000000 {
+      reg = <0x00000000 0x80000000 0x00000000 0x00020000>;
+    };
+  };
+
 	chosen {
 		bootargs = "earlycon console=ttyS0 root=/dev/vda2 rw";
 		stdout-path = "/soc/serial0@10000000";
